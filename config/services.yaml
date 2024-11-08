@@ -19,6 +19,10 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-
+    App\Service\DatabaseTablePrefix:
+        arguments: ['voisin_']
+        tags:
+            - { name: doctrine.event_subscriber, event: loadClassMetadata }
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    
