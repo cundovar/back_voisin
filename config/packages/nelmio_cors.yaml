@@ -1,14 +1,14 @@
 nelmio_cors:
     defaults:
         allow_credentials: true
-        allow_origin: ['http://localhost:3001'] # Autorise les requêtes du front-end
+        allow_origin: ['*'] # Autorise les requêtes du front-end
         allow_headers: ['Content-Type', 'Authorization']
         expose_headers: ['Authorization']
         allow_methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE']
         max_age: 3600
     paths:
         '^/api/':
-            allow_origin: ['http://localhost:3001']
+            allow_origin: ['*']
             allow_credentials: true
             allow_headers: ['Content-Type', 'Authorization']
             expose_headers: ['Authorization']

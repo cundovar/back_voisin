@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -60,8 +61,12 @@ class SecurityController extends AbstractController
         'id' => $user->getId(),
         'email' => $user->getEmail(),
         'roles' => $user->getRoles(),
-        'token' => $token
+        'username'=> $user->getUsername(),
+        'token' => $token,
     ]);
     }
+
+
+
 }
 
