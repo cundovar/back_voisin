@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Objet;
+use App\Entity\Utilisateur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +15,15 @@ class ObjetRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Objet::class);
+    }
+
+    public function findByUser(Utilisateur $user) :array
+    {
+      return $this->createQueryBuilder('o')
+              ->andWhere('o.user = :user')
+              ->setParameter('user',$user)
+              ->getQuery()
+              ->getResult();
     }
 
 //    /**

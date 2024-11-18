@@ -7,6 +7,7 @@ namespace App\Controller;
 
 use App\Entity\Utilisateur;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,31 +40,39 @@ class SecurityController extends AbstractController
 
 
     #[Route(path: '/api/login', name: 'api_loginApi', methods: ['POST'])]
-    public function loginApi(Request $request, JWTTokenManagerInterface $jwtManager): JsonResponse
+    public function loginApi(Request $request, JWTTokenManagerInterface $jwtManager, LoggerInterface $logger): JsonResponse
     {
-        // Ajoutez ce logging temporaire
-    if (!$this->getUser()) {
-        return new JsonResponse(['error' => 'No user found'], JsonResponse::HTTP_UNAUTHORIZED);
-    }
+        $logger->info("Attempting to log in the user.");
+        
+        if (!$this->getUser()) {
+            $logger->error("No user found, unauthorized access.");
+            return new JsonResponse(['error' => 'No user found'], JsonResponse::HTTP_UNAUTHORIZED);
+        }
+        
+        $user = $this->getUser();
+        if (!$user instanceof UserInterface) {
+            $logger->error("User is not an instance of UserInterface.");
+            return new JsonResponse(['error' => 'Unauthorized'], JsonResponse::HTTP_UNAUTHORIZED);
+        }
     
-    $user = $this->getUser();
-    if (!$user instanceof UserInterface) {
-        return new JsonResponse(['error' => 'Unauthorized'], JsonResponse::HTTP_UNAUTHORIZED);
-    }
-
-    try {
-        $token = $jwtManager->create($user);
-    } catch (\Exception $e) {
-        return new JsonResponse(['error' => 'JWT creation failed: ' . $e->getMessage()], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-    }
-
-    return new JsonResponse([
-        'id' => $user->getId(),
-        'email' => $user->getEmail(),
-        'roles' => $user->getRoles(),
-        'username'=> $user->getUsername(),
-        'token' => $token,
-    ]);
+        try {
+            $logger->info("Generating JWT token for user with ID: " . $user->getId());
+            $token = $jwtManager->create($user);
+        } catch (\Exception $e) {
+            $logger->error("JWT creation failed: " . $e->getMessage());
+            return new JsonResponse(['error' => 'JWT creation failed: ' . $e->getMessage()], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    
+        $logger->info("JWT token successfully generated.");
+        
+        // Réponse avec toutes les informations utilisateur
+        return new JsonResponse([
+            'id' => $user->getId() || "nill",
+            'email' => $user->getEmail(),
+            'roles' => $user->getRoles(),
+            'username' => $user->getUsername(),
+            'token' => $token,
+        ]);
     }
 
 

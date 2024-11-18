@@ -7,6 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource]
 class Category
@@ -23,6 +26,7 @@ class Category
     private Collection $objet;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['objet:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]

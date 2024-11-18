@@ -6,7 +6,7 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\Utilisateur
-                property: email  # Identifiant d'authentification
+                property: username  # Identifiant d'authentification
 
     firewalls:
         # Firewall pour l'authentification via json_login pour générer le token
@@ -15,25 +15,28 @@ security:
             stateless: true
             json_login:
                 check_path: /api/login
-                username_path: email
+                username_path: username
                 password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+                
+        # Firewall pour les requêtes API protégées qui nécessitent un token JWT
+        
         api:
             pattern: ^/api
-            stateless: true
             provider: app_user_provider
+            stateless: true
             jwt: ~
-
-        # Firewall pour les requêtes API protégées qui nécessitent un token JWT
      
 
     role_hierarchy:
-        ROLE_ADMIN: ROLE_USER
+        ROLE_ADMIN: [ROLE_USER]
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     access_control:
         - { path: ^/api/utilisateurs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/api, roles: ROLE_USER  }
-        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/me, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/test-token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }  
+        - { path: ^/api, roles: PUBLIC_ACCESS }
+        - { path: ^/api/me, roles: PUBLIC_ACCESS }
+        

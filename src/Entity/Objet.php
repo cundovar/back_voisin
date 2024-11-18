@@ -5,7 +5,12 @@ namespace App\Entity;
 use App\Repository\ObjetRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
-#[ApiResource]
+use Symfony\Component\Serializer\Annotation\Groups;
+
+#[ApiResource(
+    normalizationContext: ['groups' => ['objet:read']],
+    denormalizationContext: ['groups' => ['objet:write']]
+)]
 #[ORM\Entity(repositoryClass: ObjetRepository::class)]
 class Objet
 {
@@ -24,9 +29,11 @@ class Objet
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'objet')]
+    #[Groups(['objet:read'])]
     private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'objets')]
+    #[Groups(['objet:read'])]
     private ?Utilisateur $user = null;
 
     public function getId(): ?int

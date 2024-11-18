@@ -25,4 +25,13 @@ services:
             - { name: doctrine.event_subscriber, event: loadClassMetadata }
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    
+    App\Security\CustomAuthenticationSuccessHandler:
+        tags:
+            - { name: 'kernel.event_listener', event: 'lexik_jwt_authentication.on_authentication_success', method: '__invoke' }
+
+    App\EventListener\JWTAuthenticationSuccessListener:
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
+    App\EventListener\JWTCreatedListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'lexik_jwt_authentication.on_jwt_created', method: 'onJWTCreated' }
