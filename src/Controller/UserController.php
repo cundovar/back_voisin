@@ -139,7 +139,7 @@ public function addUserObjet(
     try {
         // Créer un nouvel objet
         $objet = new Objet();
-        $objet->setTitle($data['name']);
+        $objet->setTitle($data['tile']);
         $objet->setUser($user); // Associer l'objet à l'utilisateur
 
         // Persister l'objet en base
@@ -179,3 +179,4 @@ public function update(Request $request, Utilisateur $user, UtilisateurRepositor
 }
 
 }
+

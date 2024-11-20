@@ -34,9 +34,10 @@ security:
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     access_control:
-        - { path: ^/api/utilisateurs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/utilisateurs, roles: PUBLIC_ACCESS  }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }  
+        - { path: ^/api/objets, roles: PUBLIC_ACCESS }  
         - { path: ^/api, roles: PUBLIC_ACCESS }
         - { path: ^/api/me, roles: PUBLIC_ACCESS }
         

@@ -20,12 +20,15 @@ class Objet
     private ?int $id = null;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['objet:read'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['objet:read'])]
     private ?string $image = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['objet:read'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'objet')]
